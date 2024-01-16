@@ -57,7 +57,7 @@ class _MainScreenState extends State<MainScreen> {
     await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => AddPostForm(),
+        builder: (context) => const AddPostForm(),
       ),
     );
   }

@@ -31,5 +31,6 @@
   "are_you_sure": "Are you sure?",
   "delete": "Delete",
   "post_deleted": "Post deleted successfully",
-  "error_deleting_post": "Failed to delete post. Please try again"
+  "error_deleting_post": "Failed to delete post. Please try again",
+  "welcome_text": "Enable GPS is for when you want to share your location with others on your new posts. If you want to share your location with others, please enable GPS. Else you can skip and connect by clicking Never after clicking on enable GPS."
 }
