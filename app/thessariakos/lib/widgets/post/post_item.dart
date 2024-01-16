@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:thessariakos/helpers/device_id_helper.dart';
 import 'package:thessariakos/models/responses/post_response.dart';
 import 'package:thessariakos/widgets/post/post_details.dart';
 
@@ -29,10 +30,16 @@ class PostItem extends StatelessWidget {
     );
   }
 
-  void _navigateToPostDetails(BuildContext context, Post post) {
+  void _navigateToPostDetails(BuildContext context, Post post) async {
+    String deviceId = await DeviceIdHelper.getDeviceId();
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => PostDetails(post: post)),
+      MaterialPageRoute(
+        builder: (context) => PostDetails(
+          post: post,
+          deviceId: deviceId,
+        ),
+      ),
     );
   }
 }

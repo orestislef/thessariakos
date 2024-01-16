@@ -12,7 +12,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         createPost();
     } elseif ($_POST['action'] === 'update_user_location') {
         updateLocation();
-    }
+    } elseif ($_POST['action'] === 'delete_post') {
+        deletePost();
+	}
 }
 
 // Handle GET request for retrieving posts
@@ -132,6 +134,20 @@ function getInfo() {
         echo json_encode(['status' => 'success', 'info' => $info]);
     } else {
         echo json_encode(['status' => 'success', 'info' => []]); // Return empty list if no info
+    }
+}
+
+function deletePost(){
+    global $conn;
+
+    $isDeleted = 1;
+    $id = $_POST['id'];
+
+    $stmt = $conn->prepare("UPDATE posts SET isDeleted = ? WHERE id = ?");
+    if ($stmt->execute([$isDeleted, $id])) {
+        echo json_encode(['status' => 'success', 'message' => 'Post deleted successfully']);
+    } else {
+        echo json_encode(['status' => 'error', 'message' => 'Error deleting post']);
     }
 }
 

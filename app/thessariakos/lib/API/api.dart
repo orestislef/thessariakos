@@ -9,6 +9,39 @@ class Api {
   static const String baseUrl =
       'http://192.168.24.21:8080/thessaraikos/api.php';
 
+  static Future<bool> deletePost(int postId) async {
+    try {
+      final response = await http.post(
+        Uri.parse(baseUrl),
+        body: {
+          'action': 'delete_post',
+          'id': postId.toString(),
+        },
+      );
+
+      final data = json.decode(response.body);
+
+      if (data['status'] == 'success') {
+        if (kDebugMode) {
+          print('Post deleted successfully');
+        }
+        return true;
+      }
+
+      if (kDebugMode) {
+        print('Error deleting post: ${data['message']}');
+      }
+
+      return false;
+    } catch (error) {
+      if (kDebugMode) {
+        print('Error deleting post: $error');
+      }
+    }
+
+    return false;
+  }
+
   static Future<InfoResponse> getInfo() async {
     try {
       final response = await http.get(Uri.parse('$baseUrl?action=get_info'));
