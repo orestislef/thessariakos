@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:thessariakos/helpers/language_helper.dart';
 import 'package:thessariakos/models/responses/post_response.dart';
-import 'package:thessariakos/widgets/post/map_view.dart';
+import 'package:thessariakos/widgets/map_view.dart';
 
 class PostDetails extends StatelessWidget {
   final Post post;

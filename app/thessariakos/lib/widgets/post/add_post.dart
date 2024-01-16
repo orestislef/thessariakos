@@ -5,7 +5,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:thessariakos/API/api.dart';
 import 'package:thessariakos/helpers/device_id_helper.dart';
 import 'package:thessariakos/helpers/location_helper.dart';
-import 'package:thessariakos/widgets/post/map_view.dart';
+import 'package:thessariakos/widgets/map_view.dart';
 
 class AddPostForm extends StatefulWidget {
   const AddPostForm({super.key});
@@ -32,64 +32,67 @@ class _AddPostFormState extends State<AddPostForm> {
       appBar: AppBar(
         title: Text('add_post'.tr()),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            const SizedBox(height: 8.0),
-            Text(
-              'add_post_hint'.tr(),
-              style: const TextStyle(fontSize: 14.0),
-            ),
-            const SizedBox(height: 8.0),
-            TextField(
-              controller: titleController,
-              maxLines: 3,
-              decoration: InputDecoration(hintText: 'title'.tr()),
-            ),
-            const SizedBox(height: 16.0),
-            TextField(
-              controller: descriptionController,
-              decoration: InputDecoration(labelText: 'description'.tr()),
-              maxLines: 3,
-            ),
-            const SizedBox(height: 16.0),
-            isLocationServicesEnabled
-                ? Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Checkbox(
-                        value: shareLocation,
-                        onChanged: (value) {
-                          setState(() {
-                            shareLocation = value!;
-                          });
-                        },
-                      ),
-                      Expanded(
-                        child: Text(
-                          'share_current_location'.tr(),
-                          overflow:
-                              TextOverflow.ellipsis, // Added to handle overflow
+      body: GestureDetector(
+        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              const SizedBox(height: 8.0),
+              Text(
+                'add_post_hint'.tr(),
+                style: const TextStyle(fontSize: 14.0),
+              ),
+              const SizedBox(height: 8.0),
+              TextField(
+                controller: titleController,
+                maxLines: 3,
+                decoration: InputDecoration(hintText: 'title'.tr()),
+              ),
+              const SizedBox(height: 16.0),
+              TextField(
+                controller: descriptionController,
+                decoration: InputDecoration(labelText: 'description'.tr()),
+                maxLines: 3,
+              ),
+              const SizedBox(height: 16.0),
+              isLocationServicesEnabled
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Checkbox(
+                          value: shareLocation,
+                          onChanged: (value) {
+                            setState(() {
+                              shareLocation = value!;
+                            });
+                          },
                         ),
-                      ),
-                      IconButton(
-                        onPressed: () => showCurrentLocation(),
-                        icon: const Icon(Icons.map_rounded, size: 40.0),
-                      ),
-                    ],
-                  )
-                : const SizedBox(),
-            const SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: () {
-                _savePost();
-              },
-              child: Text('submit_post'.tr()),
-            ),
-          ],
+                        Expanded(
+                          child: Text(
+                            'share_current_location'.tr(),
+                            overflow:
+                                TextOverflow.ellipsis, // Added to handle overflow
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () => showCurrentLocation(),
+                          icon: const Icon(Icons.map_rounded, size: 40.0),
+                        ),
+                      ],
+                    )
+                  : const SizedBox(),
+              const SizedBox(height: 16.0),
+              ElevatedButton(
+                onPressed: () {
+                  _savePost();
+                },
+                child: Text('submit_post'.tr()),
+              ),
+            ],
+          ),
         ),
       ),
     );
