@@ -9,6 +9,8 @@ class PostResponse {
   factory PostResponse.fromJson(Map<String, dynamic> json) {
     List<Post> posts = <Post>[];
     posts = json['posts'].map<Post>((json) => Post.fromJson(json)).toList();
+    //reverse posts
+    posts = posts.reversed.toList();
     return PostResponse(
       status: json['status'],
       posts: posts,

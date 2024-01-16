@@ -7,6 +7,8 @@ class InfoResponse {
   factory InfoResponse.fromJson(Map<String, dynamic> json) {
     List<Info> infos = <Info>[];
     infos = json['info'].map<Info>((json) => Info.fromJson(json)).toList();
+    //order infos by date
+    infos.sort((a, b) => b.date.compareTo(a.date));
     return InfoResponse(
       status: json['status'],
       infos: infos,
