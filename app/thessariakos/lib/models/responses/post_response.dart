@@ -10,6 +10,8 @@ class PostResponse {
     List<Post> posts = <Post>[];
     posts = json['posts'].map<Post>((json) => Post.fromJson(json)).toList();
     //reverse posts
+    //here delete posts that are isDeleted
+    posts.removeWhere((element) => element.isDeleted);
     posts = posts.reversed.toList();
     return PostResponse(
       status: json['status'],

@@ -25,5 +25,11 @@
   "share_current_location": "Share Current Location",
   "post_submitted_confirmation": "Are you sure you want to submit this post?",
   "is_empty_m": "is empty",
-  "is_empty_f": "is empty"
+  "is_empty_f": "is empty",
+  "this_post_is_yours": "This post is yours",
+  "delete_post": "Delete Post",
+  "are_you_sure": "Are you sure?",
+  "delete": "Delete",
+  "post_deleted": "Post deleted successfully",
+  "error_deleting_post": "Failed to delete post. Please try again"
 }
