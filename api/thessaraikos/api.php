@@ -1,19 +1,8 @@
 <?php
 header('Content-Type: application/json');
 
-// Database configuration
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "thessariakos";
-
-// Create connection
-$conn = new PDO("mysql:host=$servername;dbname=$dbname;charset=utf8", $username, $password);
-
-// Check connection
-if (!$conn) {
-    die(json_encode(['status' => 'error', 'message' => 'Connection failed: ' . $conn->errorInfo()]));
-}
+// Include the database configuration
+include('db_config.php');
 
 // Handle POST request for creating a user or a post
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
@@ -33,6 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
     } elseif ($_GET['action'] === 'get_info') {
         getInfo();
     }
+  
 }
 
 function createUser() {
@@ -66,7 +56,6 @@ function createUser() {
         }
     }
 }
-
 
 function createPost() {
     global $conn;
@@ -135,4 +124,5 @@ function getInfo() {
         echo json_encode(['status' => 'success', 'info' => []]); // Return empty list if no info
     }
 }
+
 ?>
