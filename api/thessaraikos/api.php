@@ -76,10 +76,17 @@ function createPost() {
     $location_lat = $_POST['location_lat'];
     $location_lng = $_POST['location_lng'];
     $from_user = $_POST['from_user'];
-    $date_created = date("Y-m-d H:i:s");
+
+    // Create a DateTime object and set it to the current time in UTC
+    $date_created_utc = new DateTime('now', new DateTimeZone('Europe/Athens'));
+    
+    // Format the date as needed for the database
+    $date_created = $date_created_utc->format("Y-m-d H:i:s");
+    
     $isDeleted = false;
 
     $stmt = $conn->prepare("INSERT INTO posts (title, description, location_lat, location_lng, from_user, date_created, isDeleted) VALUES (?, ?, ?, ?, ?, ?, ?)");
+    
     if ($stmt->execute([$title, $description, $location_lat, $location_lng, $from_user, $date_created, $isDeleted])) {
         echo json_encode(['status' => 'success', 'message' => 'Post created successfully']);
     } else {
