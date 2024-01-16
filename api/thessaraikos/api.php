@@ -66,22 +66,32 @@ function createPost() {
     $location_lng = $_POST['location_lng'];
     $from_user = $_POST['from_user'];
 
-    // Create a DateTime object and set it to the current time in UTC
-    $date_created_utc = new DateTime('now', new DateTimeZone('Europe/Athens'));
-    
-    // Format the date as needed for the database
-    $date_created = $date_created_utc->format("Y-m-d H:i:s");
-    
-    $isDeleted = false;
+    // Check if from_user exists in the users table
+    $stmtCheckUser = $conn->prepare("SELECT * FROM users WHERE unique_id = ?");
+    $stmtCheckUser->execute([$from_user]);
+    $existingUser = $stmtCheckUser->fetch(PDO::FETCH_ASSOC);
 
-    $stmt = $conn->prepare("INSERT INTO posts (title, description, location_lat, location_lng, from_user, date_created, isDeleted) VALUES (?, ?, ?, ?, ?, ?, ?)");
-    
-    if ($stmt->execute([$title, $description, $location_lat, $location_lng, $from_user, $date_created, $isDeleted])) {
-        echo json_encode(['status' => 'success', 'message' => 'Post created successfully']);
+    if ($existingUser) {
+        // Create a DateTime object and set it to the current time in UTC
+        $date_created_utc = new DateTime('now', new DateTimeZone('Europe/Athens'));
+
+        // Format the date as needed for the database
+        $date_created = $date_created_utc->format("Y-m-d H:i:s");
+
+        $isDeleted = false;
+
+        $stmt = $conn->prepare("INSERT INTO posts (title, description, location_lat, location_lng, from_user, date_created, isDeleted) VALUES (?, ?, ?, ?, ?, ?, ?)");
+
+        if ($stmt->execute([$title, $description, $location_lat, $location_lng, $from_user, $date_created, $isDeleted])) {
+            echo json_encode(['status' => 'success', 'message' => 'Post created successfully']);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Error creating post']);
+        }
     } else {
-        echo json_encode(['status' => 'error', 'message' => 'Error creating post']);
+        echo json_encode(['status' => 'error', 'message' => 'Invalid from_user. User does not exist']);
     }
 }
+
 
 function updateLocation() {
     global $conn;
