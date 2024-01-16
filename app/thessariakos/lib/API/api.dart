@@ -180,6 +180,22 @@ class Api {
     }
   }
 
+  //NOT IN USE
+  static Future<PostResponse> getPostsByLastID(int postLastId) async {
+    try {
+      final response = await http
+          .get(Uri.parse('$baseUrl?action=get_posts&last_id=$postLastId'));
+
+      final data = json.decode(response.body);
+      return PostResponse.fromJson(data);
+    } catch (error) {
+      if (kDebugMode) {
+        print('Error retrieving posts: $error');
+      }
+      return PostResponse(status: 'error', posts: []);
+    }
+  }
+
   static Future<PostResponse> getPosts() async {
     try {
       final response = await http.get(Uri.parse('$baseUrl?action=get_posts'));
