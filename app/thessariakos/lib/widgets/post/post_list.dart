@@ -73,11 +73,13 @@ class _PostsListState extends State<PostsList> {
             );
           }
 
-          return ListView.builder(
-            itemCount: posts.length,
-            itemBuilder: (context, index) {
-              return PostItem(post: posts[index]);
-            },
+          return Scrollbar(
+            child: ListView.builder(
+              itemCount: posts.length,
+              itemBuilder: (context, index) {
+                return PostItem(post: posts[index]);
+              },
+            ),
           );
         }
       },

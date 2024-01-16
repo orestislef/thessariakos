@@ -22,12 +22,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text('app_name'.tr()),
-        ),
-        body: Center(
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('app_name'.tr()),
+      ),
+      body: SafeArea(
+        child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
