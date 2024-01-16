@@ -32,16 +32,19 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               if (deviceId != null) _buildUserInfo(),
-              const SizedBox(height: 30.0),
+              const SizedBox(height: 8.0),
               _buildWelcomeText(),
               isLocationEnabled
                   ? _buildConnectButton()
                   : _buildLocationPermissionButton(),
               isLocationEnabled
                   ? const SizedBox()
-                  : ElevatedButton(
-                      onPressed: _goToMainScreen,
-                      child: Text('skip_and_connect'.tr())),
+                  : Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ElevatedButton(
+                          onPressed: _goToMainScreen,
+                          child: Text('skip_and_connect'.tr())),
+                    ),
             ],
           ),
         ),
@@ -149,19 +152,32 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   Widget _buildUserInfo() {
-    return SelectableText.rich(
-      TextSpan(
-        text: '${'device_id'.tr()}: ',
-        style: const TextStyle(color: Colors.grey),
-        children: [
+    return Column(
+      children: [
+        SelectableText.rich(
           TextSpan(
-            text: deviceId,
-            style: const TextStyle(
-                color: Colors.grey, fontWeight: FontWeight.bold),
+            text: '${'device_id'.tr()}: ',
+            style: const TextStyle(color: Colors.grey),
+            children: [
+              TextSpan(
+                text: deviceId,
+                style: const TextStyle(
+                    color: Colors.grey, fontWeight: FontWeight.bold),
+              ),
+            ],
           ),
-        ],
-      ),
-      textAlign: TextAlign.center,
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 8.0),
+        !isLocationEnabled
+            ? Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text('welcome_text'.tr(),
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(fontSize: 14.0)),
+              )
+            : const SizedBox(),
+      ],
     );
   }
 }
