@@ -20,11 +20,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 // Handle GET request for retrieving posts
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action'])) {
     if ($_GET['action'] === 'get_posts') {
-        getPosts();
+		if (isset($_GET['last_id'])){
+			getPostsByLastID();
+		}else{
+			getPosts();
+		}
     } elseif ($_GET['action'] === 'get_info') {
         getInfo();
     }
-  
 }
 
 function createUser() {
@@ -115,6 +118,21 @@ function getPosts() {
     global $conn;
 
     $stmt = $conn->query("SELECT * FROM posts");
+    $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    if ($posts !== false) {
+        echo json_encode(['status' => 'success', 'posts' => $posts]);
+    } else {
+        echo json_encode(['status' => 'success', 'posts' => []]); // Return empty list if no posts
+    }
+}
+
+function getPostsByLastID() {
+	global $conn;
+
+	$lastId = $_GET['last_id'];
+	
+	$stmt = $conn->query("SELECT * FROM posts WHERE id > $lastId");
     $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     if ($posts !== false) {
