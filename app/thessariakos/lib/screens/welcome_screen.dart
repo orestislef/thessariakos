@@ -22,26 +22,28 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('app_name'.tr()),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            if (deviceId != null) _buildUserInfo(),
-            const SizedBox(height: 30.0),
-            _buildWelcomeText(),
-            isLocationEnabled
-                ? _buildConnectButton()
-                : _buildLocationPermissionButton(),
-            isLocationEnabled
-                ? const SizedBox()
-                : ElevatedButton(
-                    onPressed: _goToMainScreen,
-                    child: Text('skip_and_connect'.tr())),
-          ],
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('app_name'.tr()),
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              if (deviceId != null) _buildUserInfo(),
+              const SizedBox(height: 30.0),
+              _buildWelcomeText(),
+              isLocationEnabled
+                  ? _buildConnectButton()
+                  : _buildLocationPermissionButton(),
+              isLocationEnabled
+                  ? const SizedBox()
+                  : ElevatedButton(
+                      onPressed: _goToMainScreen,
+                      child: Text('skip_and_connect'.tr())),
+            ],
+          ),
         ),
       ),
     );
@@ -117,13 +119,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     return Shimmer.fromColors(
       baseColor: Colors.grey[800]!,
       highlightColor: Colors.grey[300]!,
-      child: Expanded(
-        child: Text(
-          '${'welcome_to'.tr()} ${'app_name'.tr()}',
-          style: const TextStyle(
-            fontSize: 24.0,
-            fontWeight: FontWeight.bold,
-          ),
+      child: Text(
+        '${'welcome_to'.tr()} ${'app_name'.tr()}',
+        style: const TextStyle(
+          fontSize: 24.0,
+          fontWeight: FontWeight.bold,
         ),
       ),
     );
