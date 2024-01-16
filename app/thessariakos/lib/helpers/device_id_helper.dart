@@ -52,7 +52,22 @@ class DeviceIdHelper {
 
   static String _generateRandomId() {
     final random = Random();
-    final id = '${random.nextInt(999999)}-${random.nextInt(999999)}';
+
+    // Generate a random number with characters inserted
+    String generateRandomNumberWithChars() {
+      final randomNumber = random.nextInt(999999);
+      final char = String.fromCharCode(random.nextInt(26) + 65);
+      final indexToInsertChar = random.nextInt(6);
+
+      final numberString = randomNumber.toString();
+      final modifiedNumberString =
+          '${numberString.substring(0, indexToInsertChar)}$char${numberString.substring(indexToInsertChar)}';
+
+      return modifiedNumberString;
+    }
+
+    final id =
+        '${generateRandomNumberWithChars()}-${generateRandomNumberWithChars()}';
     return id;
   }
 }
