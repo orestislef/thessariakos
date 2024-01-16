@@ -35,22 +35,24 @@ class InformationForm extends StatelessWidget {
           DateTime currentDate = DateTime.now();
           int daysPassed = currentDate.difference(startDate).inDays;
 
-          return ListView.builder(
-            itemCount: infoList.length + 1, // Add 1 for the additional ListTile
-            itemBuilder: (context, index) {
-              if (index == 0) {
-                return ListTile(
-                  title: Text('info_time_passed_fly_over'.tr()),
-                  subtitle: Text('$daysPassed ${'days'.tr()}'),
-                );
-              } else {
-                final info = infoList[index - 1];
-                return ListTile(
-                  title: Text(info.name),
-                  subtitle: Text(info.details),
-                );
-              }
-            },
+          return Scrollbar(
+            child: ListView.builder(
+              itemCount: infoList.length + 1, // Add 1 for the additional ListTile
+              itemBuilder: (context, index) {
+                if (index == 0) {
+                  return ListTile(
+                    title: Text('info_time_passed_fly_over'.tr()),
+                    subtitle: Text('$daysPassed ${'days'.tr()}'),
+                  );
+                } else {
+                  final info = infoList[index - 1];
+                  return ListTile(
+                    title: Text(info.name),
+                    subtitle: Text(info.details),
+                  );
+                }
+              },
+            ),
           );
         }
       },
