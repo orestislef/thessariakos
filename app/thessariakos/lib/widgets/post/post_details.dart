@@ -5,29 +5,36 @@ import 'package:thessariakos/helpers/language_helper.dart';
 import 'package:thessariakos/models/responses/post_response.dart';
 import 'package:thessariakos/widgets/map_view.dart';
 
-class PostDetails extends StatelessWidget {
+class PostDetails extends StatefulWidget {
   final Post post;
   final String deviceId;
 
   const PostDetails({super.key, required this.post, required this.deviceId});
 
   @override
+  State<PostDetails> createState() => _PostDetailsState();
+}
+
+class _PostDetailsState extends State<PostDetails> {
+  bool isDeleting = false;
+
+  @override
   Widget build(BuildContext context) {
     String formattedDate =
         DateFormat.yMMMMd(LanguageHelper.getLanguageUsedInApp(context))
             .add_jm()
-            .format(post.dateCreated);
+            .format(widget.post.dateCreated);
 
-    bool hasLocationData = post.location != null &&
-        post.location!.latitude != 0.0 &&
-        post.location!.longitude != 0.0;
+    bool hasLocationData = widget.post.location != null &&
+        widget.post.location!.latitude != 0.0 &&
+        widget.post.location!.longitude != 0.0;
 
-    bool isMyPost = post.fromUser == deviceId;
+    bool isMyPost = widget.post.fromUser == widget.deviceId;
 
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          post.title,
+          widget.post.title,
           style: const TextStyle(fontSize: 24.0),
         ),
       ),
@@ -51,7 +58,7 @@ class PostDetails extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: SelectableText(
-                        post.description,
+                        widget.post.description,
                         textAlign: TextAlign.center,
                         style: const TextStyle(fontSize: 24.0),
                       ),
@@ -60,27 +67,29 @@ class PostDetails extends StatelessWidget {
                 ),
                 const SizedBox(height: 16.0),
                 hasLocationData
-                    ? MapView(latLng: post.location!)
+                    ? MapView(latLng: widget.post.location!)
                     : const SizedBox(),
                 const SizedBox(height: 16.0),
                 isMyPost
                     ? Column(
-                      children: [
-                        Text('this_post_is_yours'.tr()),
-                        const SizedBox(height: 16.0),
-                        ElevatedButton(
-                          onPressed: () => _deletePost(context),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(Icons.delete),
-                              const SizedBox(width: 10.0),
-                              Text('delete'.tr()),
-                            ],
-                          ),
-                        ),
-                      ],
-                    )
+                        children: [
+                          Text('this_post_is_yours'.tr()),
+                          const SizedBox(height: 16.0),
+                          isDeleting
+                              ? const LinearProgressIndicator()
+                              : ElevatedButton(
+                                  onPressed: () => _deletePost(context),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Icon(Icons.delete),
+                                      const SizedBox(width: 10.0),
+                                      Text('delete'.tr()),
+                                    ],
+                                  ),
+                                ),
+                        ],
+                      )
                     : const SizedBox(),
               ],
             ),
@@ -113,7 +122,15 @@ class PostDetails extends StatelessWidget {
       return;
     }
 
-    bool isDeleted = await Api.deletePost(post.id);
+    setState(() {
+      isDeleting = true;
+    });
+
+    bool isDeleted = await Api.deletePost(widget.post.id);
+
+    setState(() {
+      isDeleting = false;
+    });
 
     if (isDeleted) {
       Navigator.pop(context);

@@ -20,6 +20,8 @@ class _AddPostFormState extends State<AddPostForm> {
   bool shareLocation = true; // Default to true (enabled)
   bool isLocationServicesEnabled = false;
 
+  bool isSending = false;
+
   @override
   void initState() {
     _checkLocationServices();
@@ -49,11 +51,13 @@ class _AddPostFormState extends State<AddPostForm> {
               TextField(
                 controller: titleController,
                 maxLines: 3,
-                decoration: InputDecoration(hintText: 'title'.tr()),
+                textInputAction: TextInputAction.next,
+                decoration: InputDecoration(labelText: 'title'.tr()),
               ),
               const SizedBox(height: 16.0),
               TextField(
                 controller: descriptionController,
+                textInputAction: TextInputAction.done,
                 decoration: InputDecoration(labelText: 'description'.tr()),
                 maxLines: 3,
               ),
@@ -73,8 +77,8 @@ class _AddPostFormState extends State<AddPostForm> {
                         Expanded(
                           child: Text(
                             'share_current_location'.tr(),
-                            overflow:
-                                TextOverflow.ellipsis, // Added to handle overflow
+                            overflow: TextOverflow
+                                .ellipsis, // Added to handle overflow
                           ),
                         ),
                         IconButton(
@@ -85,12 +89,14 @@ class _AddPostFormState extends State<AddPostForm> {
                     )
                   : const SizedBox(),
               const SizedBox(height: 16.0),
-              ElevatedButton(
-                onPressed: () {
-                  _savePost();
-                },
-                child: Text('submit_post'.tr()),
-              ),
+              isSending
+                  ? const LinearProgressIndicator()
+                  : ElevatedButton(
+                      onPressed: () {
+                        _savePost();
+                      },
+                      child: Text('submit_post'.tr()),
+                    ),
             ],
           ),
         ),
@@ -102,26 +108,21 @@ class _AddPostFormState extends State<AddPostForm> {
     String title = titleController.text;
     String description = descriptionController.text;
 
-    if (title.isEmpty){
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('${'title'.tr()} ${'is_empty_m'.tr()}'),
-            duration: const Duration(seconds: 2),
-          )
-      );
+    if (title.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('${'title'.tr()} ${'is_empty_m'.tr()}'),
+        duration: const Duration(seconds: 2),
+      ));
       return;
     }
 
-    if (description.isEmpty){
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('${'description'.tr()} ${'is_empty_f'.tr()}'),
-            duration: const Duration(seconds: 2),
-          )
-      );
+    if (description.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('${'description'.tr()} ${'is_empty_f'.tr()}'),
+        duration: const Duration(seconds: 2),
+      ));
       return;
     }
-
 
     bool isOk = await showDialog(
         context: context,
@@ -149,8 +150,9 @@ class _AddPostFormState extends State<AddPostForm> {
     if (!isOk) {
       return;
     }
-
-
+    setState(() {
+      isSending = true;
+    });
 
     LatLng latLng = const LatLng(0.0, 0.0);
 
@@ -173,6 +175,10 @@ class _AddPostFormState extends State<AddPostForm> {
       locationLng: latLng.longitude,
       fromUser: uniqueId,
     );
+
+    setState(() {
+      isSending = false;
+    });
 
     if (success) {
       ScaffoldMessenger.of(context).showSnackBar(
