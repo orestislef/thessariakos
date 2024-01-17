@@ -19,7 +19,6 @@ class WelcomeScreen extends StatefulWidget {
 class _WelcomeScreenState extends State<WelcomeScreen> {
   bool isLocationEnabled = false;
   String? deviceId;
-
   bool isConnecting = false;
 
   @override
@@ -129,14 +128,17 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   Widget _buildWelcomeText() {
-    return Shimmer.fromColors(
-      baseColor: Colors.grey[800]!,
-      highlightColor: Colors.grey[300]!,
-      child: Text(
-        '${'welcome_to'.tr()} ${'app_name'.tr()}',
-        style: const TextStyle(
-          fontSize: 24.0,
-          fontWeight: FontWeight.bold,
+    return GestureDetector(
+      onLongPressEnd: (_) => _debugSetUrl(),
+      child: Shimmer.fromColors(
+        baseColor: Colors.grey[800]!,
+        highlightColor: Colors.grey[300]!,
+        child: Text(
+          '${'welcome_to'.tr()} ${'app_name'.tr()}',
+          style: const TextStyle(
+            fontSize: 24.0,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     );
@@ -191,5 +193,45 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             : const SizedBox(),
       ],
     );
+  }
+
+  void _debugSetUrl() {
+    if (!kDebugMode) {
+      return;
+    }
+    showDialog(
+        context: context,
+        builder: (context) {
+          final urlController = TextEditingController(text: Api.baseUrl);
+          return AlertDialog(
+              title: const Text('Debug change url'),
+              content: TextField(
+                maxLines: 2,
+                controller: urlController,
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('cancel'.tr()),
+                ),
+                TextButton(
+                  onPressed: () => _onChangeUrl(urlController),
+                  child: Text('ok'.tr()),
+                )
+              ]);
+        });
+  }
+
+  void _onChangeUrl(TextEditingController urlController) {
+    String url = urlController.text;
+    if (url.isEmpty) {
+      urlController.text = Api.baseUrl;
+      return;
+    } else {
+      Api.baseUrl = url;
+      Navigator.of(context).pop();
+    }
   }
 }

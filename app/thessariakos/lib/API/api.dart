@@ -6,7 +6,7 @@ import 'package:thessariakos/models/responses/info_response.dart';
 import 'package:thessariakos/models/responses/post_response.dart';
 
 class Api {
-  static const String baseUrl =
+  static String baseUrl =
       'http://192.168.24.21:8080/thessaraikos/api.php';
 
   static Future<bool> deletePost(int postId) async {
