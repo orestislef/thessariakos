@@ -6,8 +6,8 @@ import 'package:thessariakos/models/responses/info_response.dart';
 import 'package:thessariakos/models/responses/post_response.dart';
 
 class Api {
-  static String baseUrl =
-      'http://192.168.24.21:8080/thessaraikos/api.php';
+  static String baseUrl = 'http://192.168.24.21:8080/thessaraikos/api.php';
+  static const Duration timeout = Duration(seconds: 10);
 
   static Future<bool> deletePost(int postId) async {
     try {
@@ -17,7 +17,7 @@ class Api {
           'action': 'delete_post',
           'id': postId.toString(),
         },
-      );
+      ).timeout(timeout);
 
       final data = json.decode(response.body);
 
@@ -44,7 +44,9 @@ class Api {
 
   static Future<InfoResponse> getInfo() async {
     try {
-      final response = await http.get(Uri.parse('$baseUrl?action=get_info'));
+      final response = await http
+          .get(Uri.parse('$baseUrl?action=get_info'))
+          .timeout(timeout);
 
       final data = json.decode(response.body);
 
@@ -85,7 +87,7 @@ class Api {
           'current_location_lat': currentLocationLat.toString(),
           'current_location_lng': currentLocationLng.toString(),
         },
-      );
+      ).timeout(timeout);
 
       final data = json.decode(response.body);
       if (data['status'] == 'success') {
@@ -125,7 +127,7 @@ class Api {
           'location_lng': locationLng.toString(),
           'from_user': fromUser,
         },
-      );
+      ).timeout(timeout);
 
       final data = json.decode(response.body);
       if (data['status'] == 'success') {
@@ -161,7 +163,7 @@ class Api {
           'current_location_lat': currentLocationLat.toString(),
           'current_location_lng': currentLocationLng.toString(),
         },
-      );
+      ).timeout(timeout);
 
       final data = json.decode(response.body);
       if (data['status'] == 'success') {
@@ -184,7 +186,8 @@ class Api {
   static Future<PostResponse> getPostsByLastID(int postLastId) async {
     try {
       final response = await http
-          .get(Uri.parse('$baseUrl?action=get_posts&last_id=$postLastId'));
+          .get(Uri.parse('$baseUrl?action=get_posts&last_id=$postLastId'))
+          .timeout(timeout);
 
       final data = json.decode(response.body);
       return PostResponse.fromJson(data);
@@ -198,7 +201,9 @@ class Api {
 
   static Future<PostResponse> getPosts() async {
     try {
-      final response = await http.get(Uri.parse('$baseUrl?action=get_posts'));
+      final response = await http
+          .get(Uri.parse('$baseUrl?action=get_posts'))
+          .timeout(timeout);
 
       final data = json.decode(response.body);
       return PostResponse.fromJson(data);
