@@ -20,6 +20,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   bool isLocationEnabled = false;
   String? deviceId;
 
+  bool isConnecting = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,6 +55,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   void _goToMainScreen() async {
+    setState(() {
+      isConnecting = true;
+    });
     String uniqueId = await DeviceIdHelper.getDeviceId();
     while (uniqueId.isEmpty) {
       uniqueId = await DeviceIdHelper.getDeviceId();
@@ -70,6 +75,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       currentLocationLat: latLng.latitude,
       currentLocationLng: latLng.longitude,
     );
+
+    setState(() {
+      isConnecting = false;
+    });
+
     if (isUserCreated) {
       Navigator.pushAndRemoveUntil(
         context,
@@ -133,10 +143,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   Widget _buildConnectButton() {
-    return ElevatedButton(
-      onPressed: _goToMainScreen,
-      child: Text('connect'.tr()),
-    );
+    return isConnecting
+        ? const CircularProgressIndicator()
+        : ElevatedButton(
+            onPressed: _goToMainScreen,
+            child: Text('connect'.tr()),
+          );
   }
 
   void _getDeviceId() {
