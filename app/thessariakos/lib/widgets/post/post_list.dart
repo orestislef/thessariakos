@@ -64,22 +64,36 @@ class _PostsListState extends State<PostsList> {
           );
         } else {
           final posts = postResponse.data!.posts;
-          if (posts.isEmpty) {
+          if (posts.isEmpty && postResponse.data!.status == 'success') {
             return Center(
               child: Text(
                 'no_recent_posts'.tr(),
                 style: TextStyle(fontSize: 20.0, color: Colors.grey[600]),
               ),
             );
+          } else if (posts.isEmpty && postResponse.data!.status == 'error') {
+            return Center(
+              child: Text(
+                'no_internet_connection'.tr(),
+                style: TextStyle(fontSize: 20.0, color: Colors.grey[600]),
+              ),
+            );
           }
 
-          return Scrollbar(
-            child: ListView.builder(
-              itemCount: posts.length,
-              itemBuilder: (context, index) {
-                return PostItem(post: posts[index]);
-              },
-            ),
+          return Stack(
+            children: [
+              postResponse.connectionState == ConnectionState.waiting
+                  ? const LinearProgressIndicator()
+                  : const SizedBox(),
+              Scrollbar(
+                child: ListView.builder(
+                  itemCount: posts.length,
+                  itemBuilder: (context, index) {
+                    return PostItem(post: posts[index]);
+                  },
+                ),
+              ),
+            ],
           );
         }
       },
