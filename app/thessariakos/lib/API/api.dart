@@ -6,7 +6,7 @@ import 'package:thessariakos/models/responses/info_response.dart';
 import 'package:thessariakos/models/responses/post_response.dart';
 
 class Api {
-  static String baseUrl = 'http://192.168.24.21:8080/thessaraikos/api.php';
+  static String baseUrl = 'http://144.24.189.255/thessaraikos/api.php';
   static const Duration timeout = Duration(seconds: 10);
 
   static Future<bool> deletePost(int postId) async {
