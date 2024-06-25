@@ -2,7 +2,7 @@
 // Database configuration
 $servername = "localhost";
 $username = "root";
-$password = "";
+$password = "orestislef";
 $dbname = "thessariakos";
 
 // Create connection
