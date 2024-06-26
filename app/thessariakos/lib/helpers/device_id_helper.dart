@@ -1,36 +1,33 @@
-import 'dart:io' show Platform;
-
-import 'package:device_info/device_info.dart';
 import 'package:flutter/foundation.dart';
 import 'package:platform_device_id/platform_device_id.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
+
+const String webDeviceIdKey = 'webDeviceId';
 
 class DeviceIdHelper {
   static Future<String> getDeviceId() async {
     if (kIsWeb) {
-      String? deviceId = await PlatformDeviceId.getDeviceId;
-      return deviceId ?? 'web';
-    }
-
-    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-
-    if (Platform.isAndroid) {
-      String deviceId = await _getAndroidDeviceId(deviceInfo);
+      String deviceId = await _getWebDeviceId();
       return deviceId;
-    } else if (Platform.isIOS) {
-      String deviceId = await _getIosDeviceId(deviceInfo);
+    } else {
+      String deviceId = await PlatformDeviceId.getDeviceId ?? 'unknown';
       return deviceId;
     }
-
-    return 'unknown';
   }
 
-  static Future<String> _getAndroidDeviceId(DeviceInfoPlugin deviceInfo) async {
-    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-    return androidInfo.androidId;
-  }
+  static Future<String> _getWebDeviceId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String storedDeviceId = prefs.getString(webDeviceIdKey) ?? '';
 
-  static Future<String> _getIosDeviceId(DeviceInfoPlugin deviceInfo) async {
-    IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-    return iosInfo.identifierForVendor;
+    if (storedDeviceId.isNotEmpty) {
+      return storedDeviceId;
+    } else {
+      var uuid = const Uuid();
+      String webDeviceId = uuid.v4();
+      await prefs.setString(webDeviceIdKey, webDeviceId);
+
+      return webDeviceId;
+    }
   }
 }
