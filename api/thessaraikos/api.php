@@ -65,11 +65,12 @@ function createUser() {
 function createPost() {
     global $conn;
 
-    $title = $_POST['title'];
-    $description = $_POST['description'];
-    $location_lat = $_POST['location_lat'];
-    $location_lng = $_POST['location_lng'];
-    $from_user = $_POST['from_user'];
+    // Fetch and sanitize inputs
+    $title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_STRING);
+    $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_STRING);
+    $location_lat = filter_input(INPUT_POST, 'location_lat', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+    $location_lng = filter_input(INPUT_POST, 'location_lng', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+    $from_user = filter_input(INPUT_POST, 'from_user', FILTER_SANITIZE_STRING);
 
     // Check if from_user exists in the users table
     $stmtCheckUser = $conn->prepare("SELECT * FROM users WHERE unique_id = ?");
@@ -83,7 +84,7 @@ function createPost() {
         // Format the date as needed for the database
         $date_created = $date_created_utc->format("Y-m-d H:i:s");
 
-        $isDeleted = false;
+        $isDeleted = 0; // Use 0 for false in database context
 
         $stmt = $conn->prepare("INSERT INTO posts (title, description, location_lat, location_lng, from_user, date_created, isDeleted) VALUES (?, ?, ?, ?, ?, ?, ?)");
 

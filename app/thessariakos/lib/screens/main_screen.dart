@@ -11,11 +11,31 @@ class MainScreen extends StatefulWidget {
   State<MainScreen> createState() => _MainScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> {
+class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
+  late TabController _tabController;
+  bool _isAddPostVisible = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(
+      length: _buildNavForTabs().length,
+      vsync: this,
+    );
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Tab> navTabsList = _buildNavForTabs();
     List<Widget> tabsList = _buildTabs();
+
+    _tabController.addListener(() => _onTabChange(_tabController.index));
 
     return DefaultTabController(
       length: navTabsList.length,
@@ -23,18 +43,20 @@ class _MainScreenState extends State<MainScreen> {
         appBar: AppBar(
           title: Text('app_name'.tr()),
           bottom: TabBar(
+            controller: _tabController,
             tabs: navTabsList,
           ),
         ),
         body: TabBarView(
           children: tabsList,
         ),
-        floatingActionButton: FloatingActionButton(
-          child: const Icon(Icons.add),
-          onPressed: () => _addPost(
-            context: context,
-          ),
-        ),
+        floatingActionButton: _isAddPostVisible
+            ? FloatingActionButton(
+                heroTag: 'add_post',
+                onPressed: _addPost,
+                child: const Icon(Icons.add),
+              )
+            : null,
       ),
     );
   }
@@ -53,12 +75,18 @@ class _MainScreenState extends State<MainScreen> {
     ];
   }
 
-  void _addPost({required BuildContext context}) async {
+  void _addPost() async {
     await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => const AddPostForm(),
       ),
     );
+  }
+
+  void _onTabChange(int index) {
+    setState(() {
+      _isAddPostVisible = index == 0;
+    });
   }
 }
