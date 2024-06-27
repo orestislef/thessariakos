@@ -104445,7 +104445,7 @@ $.aFe=A.A(t.N,t.y)
 $.aK4=null
 $.ayk=null
 $.al9=null
-$.IN="http://144.24.189.255/thessaraikos/api.php"})();(function lazyInitializers(){var s=hunkHelpers.lazyFinal,r=hunkHelpers.lazy
+$.IN="https://144.24.189.255/thessaraikos/api.php"})();(function lazyInitializers(){var s=hunkHelpers.lazyFinal,r=hunkHelpers.lazy
 s($,"b3j","cb",()=>{var q="navigator"
 return A.aZP(A.aSi(A.E(A.E(self.window,q),"vendor")),B.d.aur(A.aR6(A.E(self.window,q))))})
 s($,"b43","dx",()=>A.aZR())
